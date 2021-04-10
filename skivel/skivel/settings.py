@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'skivel.urls'
+ROOT_URLCONF = 'main.urls'
 
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 
