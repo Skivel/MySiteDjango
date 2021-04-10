@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home page</title>
-</head>
-<body>
-<div>
-<h1>
-    Home Page ready
-</h1>
-<p>
-    Created by: Skivel
-</p>
-</div>
-</body>
-</html>
+{% extend 'main/layout.html' %}
+
+{% block body %}Home page{% endblock %}
+
+{% block body %}
+    <div>
+        <h1>
+            Home Page ready
+        </h1>
+        <p>
+            Created by: Skivel
+        </p>
+    </div>
+{% endblock %}
