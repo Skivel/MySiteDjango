@@ -1,11 +1,27 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 </head>
 <body>
-    {% block body %}
-    {% endblock %}
+    <aside>
+        <img src="{% static 'main/img/logo.png' %}" alt="">
+        <span class="logo">Skivel</span>
+        <h3>Меню</h3>
+        <ul>
+            <a href="/"><li><i class="fas fa-home"></i> Головна</li></a>
+            <a href="{% url 'about' %}"><li><i class="far fa-address-card"></i> Про нас</li></a>
+            <a href="{% url 'info' %}"><li><i class="fas fa-info"></i> info</li></a>
+        </ul>
+    </aside>
+    <main>
+        {% block body %}
+        {% endblock %}
+    </main>
 </body>
 </html>
