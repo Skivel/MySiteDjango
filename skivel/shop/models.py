@@ -1,15 +1,15 @@
 from django.db import models
 
 
-class Asort(models.Model):
-    title = models.CharField('shop_asort', max_length=50),
-    price = models.CharField('Ціна', max_length=10),
-    characteristics = models.TextField('Характеристики'),
+class Сargo(models.Model):
+    title = models.CharField('Заголовок', max_length=50)
+    characteristics = models.TextField('Характеристики')
+    price = models.CharField('Ціна', max_length=10)
     date = models.DateField('Дата')
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = 'Асортиметн/Каталог'
-        verbose_name_plural = 'Асортиметн/Каталог'
+        verbose_name = 'Товари',
+        verbose_name_plural = 'Товари'

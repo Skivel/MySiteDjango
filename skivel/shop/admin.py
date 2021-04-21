@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Asort
+from .models import Сargo
 
-admin.site.register(Asort)
+admin.site.register(Сargo)
