@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 User = get_user_model()
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name='Назва категорії')
@@ -14,6 +16,10 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+
+    class Meta:
+        abstract = True
+
     category = models.ForeignKey(Category, verbose_name='Test', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Назва товару')
     slug = models.SlugField(unique=True)
@@ -25,10 +31,40 @@ class Product(models.Model):
         return self.title
 
 
+class CPU(Product):
+    core = models.CharField(max_length=2, verbose_name='Кількість ядер')
+    threads = models.CharField(max_length=3, verbose_name='Кількість потоків')
+    cesh = models.CharField(max_length=2, verbose_name='Кеш')
+    power = models.CharField(max_length=3, verbose_name='ТДП')
+    core_freq = models.CharField(max_length=5, verbose_name='Частота процессора')
+    boost = models.BooleanField(default=True, verbose_name='Turbo Boost(+/-)')
+    video = models.BooleanField(default=True, verbose_name='Встроєне графічне ядро(+/-)')
+
+    def __str__(self):
+        return "{} : {}".format(self.category.name, self.title)
+
+
+class Smartphone(Product):
+    diagonal = models.CharField(max_length=255, verbose_name='Діагональ екрану')
+    display_type = models.CharField(max_length=255, verbose_name='Тип дисплею')
+    reslution = models.CharField(max_length=255, verbose_name='Розширення екрану')
+    accum_volume = models.CharField(max_length=200, verbose_name='Об\'єм акумулятора')
+    ram = models.CharField(max_length=255, verbose_name='Оперативна пам\'ять')
+    sd = models.BooleanField(default=True)
+    sd_volume_max = models.CharField(max_length=255, verbose_name='Максимальний об\'єм SD-карти')
+    main_cam_mp = models.CharField(max_length=255, verbose_name='Основна камера')
+    frontal_cam_mp = models.CharField(max_length=255, verbose_name='Фронтальна камера')
+
+    def __str__(self):
+        return "{} : {}".format(self.category.name, self.title)
+
+
 class CartProduct(models.Model):
     user = models.ForeignKey('Customer', verbose_name='Покупець', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
-    product = models.ForeignKey('Product', verbose_name='Товар', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    obj_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'obj_id')
     unmount = models.PositiveIntegerField(default=1)
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Загальна Ціна')
 
@@ -53,12 +89,3 @@ class Customer(models.Model):
 
     def __str__(self):
         return "Покупець: {} {}".format(self.user, self.first_name, self.user.last_name)
-
-
-class Specification(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    name = models.CharField(max_length=255, verbose_name='Назва товару для характеристик')
-
-    def __str__(self):
-        return "Характеристики для товару: {}".format(self.name)
