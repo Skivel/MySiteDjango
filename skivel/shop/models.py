@@ -20,7 +20,7 @@ class Product(models.Model):
     class Meta:
         abstract = True
 
-    category = models.ForeignKey(Category, verbose_name='Test', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, verbose_name='Назва категорії', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='Назва товару')
     slug = models.SlugField(unique=True)
     image = models.ImageField(verbose_name='Фото')
@@ -63,8 +63,8 @@ class CartProduct(models.Model):
     user = models.ForeignKey('Customer', verbose_name='Покупець', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    obj_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'obj_id')
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
     unmount = models.PositiveIntegerField(default=1)
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Загальна Ціна')
 

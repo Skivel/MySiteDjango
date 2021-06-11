@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('shop', '0001_initial'),
     ]
@@ -29,7 +28,8 @@ class Migration(migrations.Migration):
                 ('sd_volume_max', models.CharField(max_length=255, verbose_name="Максимальний об'єм SD-карти")),
                 ('main_cam_mp', models.CharField(max_length=255, verbose_name='Основна камера')),
                 ('frontal_cam_mp', models.CharField(max_length=255, verbose_name='Фронтальна камера')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop.category', verbose_name='Test')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop.category',
+                                               verbose_name='Test')),
             ],
             options={
                 'abstract': False,
@@ -51,7 +51,8 @@ class Migration(migrations.Migration):
                 ('core_freq', models.CharField(max_length=5, verbose_name='Частота процессора')),
                 ('boost', models.BooleanField(default=True, verbose_name='Turbo Boost(+/-)')),
                 ('video', models.BooleanField(default=True, verbose_name='Встроєне графічне ядро(+/-)')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop.category', verbose_name='Test')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shop.category',
+                                               verbose_name='Test')),
             ],
             options={
                 'abstract': False,
