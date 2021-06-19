@@ -37,10 +37,12 @@ class LatestProductsManager:
 
 
 class LatestProducts:
+
     objects = LatestProductsManager()
 
 
 class Category(models.Model):
+
     name = models.CharField(max_length=255, verbose_name='Назва категорії')
     slug = models.SlugField(unique=True)
 
@@ -65,9 +67,11 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Ціна')
 
     def __str__(self):
+
         return self.title
 
     def save(self, *args, **kwargs):
+
         image = self.image
         img = Image.open(image)
         min_width, min_height = self.MIN_RESOLUTION
@@ -79,6 +83,7 @@ class Product(models.Model):
 
 
 class CPU(Product):
+
     core = models.CharField(max_length=2, verbose_name='Кількість ядер')
     threads = models.CharField(max_length=3, verbose_name='Кількість потоків')
     cesh = models.CharField(max_length=2, verbose_name='Кеш')
@@ -92,6 +97,7 @@ class CPU(Product):
 
 
 class Smartphone(Product):
+
     diagonal = models.CharField(max_length=255, verbose_name='Діагональ екрану')
     display_type = models.CharField(max_length=255, verbose_name='Тип дисплею')
     reslution = models.CharField(max_length=255, verbose_name='Розширення екрану')
@@ -107,6 +113,7 @@ class Smartphone(Product):
 
 
 class CartProduct(models.Model):
+
     user = models.ForeignKey('Customer', verbose_name='Покупець', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -120,6 +127,7 @@ class CartProduct(models.Model):
 
 
 class Cart(models.Model):
+
     owner = models.ForeignKey('Customer', verbose_name='Власник', on_delete=models.CASCADE)
     product = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveIntegerField(default=0)
@@ -130,6 +138,7 @@ class Cart(models.Model):
 
 
 class Customer(models.Model):
+
     user = models.ForeignKey(User, verbose_name='Користувач', on_delete=models.CASCADE)
     phone = models.CharField(max_length=20, verbose_name='Номер телефону')
     address = models.CharField(max_length=255, verbose_name='Адрес')
