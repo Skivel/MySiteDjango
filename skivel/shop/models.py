@@ -1,9 +1,19 @@
+from PIL import Image
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 User = get_user_model()
+
+
+class MinResolutionMirrorException(Exception):
+    pass
+
+
+class MaxResolutionMirrorException(Exception):
+    pass
 
 
 class LatestProductsManager:
@@ -39,6 +49,11 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+
+    MIN_RESOLUTION = (400, 400)
+    MAX_RESOLUTION = (1000, 1000)
+    MAX_IMG_SIZE = 3145728
+
     class Meta:
         abstract = True
 
@@ -51,6 +66,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        image = self.image
+        img = Image.open(image)
+        min_width, min_height = self.MIN_RESOLUTION
+        max_width, max_height = self.MAX_RESOLUTION
+        if img.width < min_width or img.height < min_height:
+            raise MinResolutionMirrorException('Розширення зображення менше мінімального!')
+        if img.width > max_width or img.height > max_height:
+            raise MaxResolutionMirrorException('Розширення зображення більше максимального!')
 
 
 class CPU(Product):
