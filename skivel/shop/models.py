@@ -80,6 +80,7 @@ class Product(models.Model):
             raise MinResolutionMirrorException('Розширення зображення менше мінімального!')
         if img.width > max_width or img.height > max_height:
             raise MaxResolutionMirrorException('Розширення зображення більше максимального!')
+        super(Product, self).save(*args, **kwargs)
 
 
 class CPU(Product):
