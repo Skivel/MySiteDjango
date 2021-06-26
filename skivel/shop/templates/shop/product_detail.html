@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-Name:  {{products.title}}
-</body>
-</html>
+{% extends 'main/loyaut.html' %}
+
+{% block title %}{{products.title}}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2 style="color: #fff; padding-top: 10px; text-align:center;">{{products.title}}</h2>
+            <img src="{{products.image.url}}" class="img-fluid" style="padding-top: 20px;">
+        </div>
+        <div class="col-md-8" style="color: #fff;">
+            <nav aria-label="breadcrumb" style="padding-top: 10px;">
+                <ol class="breadcrumb" style="padding-right: 30%; padding-left: 30%;">
+                  <li class="breadcrumb-item"><a href="#">Категорії</a></li>
+                  <li class="breadcrumb-item"><a href="#">Смартфони</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Data</li>
+                </ol>
+            </nav>
+            <p>Ціна: {{products.price}} грн.</p>
+            <p>Опис: {{products.description}}</p>
+        </div>
+    </div>
+{% endblock %}
