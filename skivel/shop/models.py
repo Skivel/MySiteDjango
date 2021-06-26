@@ -1,13 +1,49 @@
+import sys
+
+from PIL import Image
+
+from io import BytesIO
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 User = get_user_model()
 
 
+class MinResolutionMirrorException(Exception):
+    pass
+
+
+class LatestProductsManager:
+
+    @staticmethod
+    def get_products_for_main_page(*args, **kwargs):
+        with_respect_to = kwargs.get('with_respect_to')
+        products = []
+        ct_models = ContentType.objects.filter(model__in=args)
+        for ct_model in ct_models:
+            model_products = ct_model.model_class()._base_manager.all().order_by('id')[:5]
+            products.extend(model_products)
+        if with_respect_to:
+            ct_model = ContentType.objects.filter(model=with_respect_to)
+            if ct_model.exists():
+                if with_respect_to in args:
+                    return sorted(
+                        products, key=lambda x: x.__class__._meta.model_name.startswith(with_respect_to), reverse=True
+                    )
+        return products
+
+
+class LatestProducts:
+
+    objects = LatestProductsManager()
+
+
 class Category(models.Model):
+
     name = models.CharField(max_length=255, verbose_name='Назва категорії')
     slug = models.SlugField(unique=True)
 
@@ -16,6 +52,10 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+
+    MIN_RESOLUTION = (400, 400)
+    MAX_RESOLUTION = (800, 800)
+    MAX_IMG_SIZE = 3145728
 
     class Meta:
         abstract = True
@@ -28,10 +68,32 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Ціна')
 
     def __str__(self):
+
         return self.title
+
+    def save(self, *args, **kwargs):
+
+        image = self.image
+        img = Image.open(image)
+        new_img = img.convert('RGB')
+        filestream = BytesIO()
+        min_width, min_height = self.MIN_RESOLUTION
+        max_width, max_height = self.MAX_RESOLUTION
+        if img.width < min_width or img.height < min_height:
+            raise MinResolutionMirrorException('Розширення зображення менше мінімального!')
+        if img.width > max_width or img.height > max_height:
+            resize_new_img = new_img.resize((600, 600), Image.ANTIALIAS)
+            resize_new_img.save(filestream, "JPEG", quality=90)
+            filestream.seek(0)
+            name = '{}.{}'.format(*self.image.name.split('.'))
+            self.image = InMemoryUploadedFile(
+                filestream, 'ImageField', name, "jpeg/image", sys.getsizeof(filestream), None
+            )
+        super(Product, self).save(*args, **kwargs)
 
 
 class CPU(Product):
+
     core = models.CharField(max_length=2, verbose_name='Кількість ядер')
     threads = models.CharField(max_length=3, verbose_name='Кількість потоків')
     cesh = models.CharField(max_length=2, verbose_name='Кеш')
@@ -45,6 +107,7 @@ class CPU(Product):
 
 
 class Smartphone(Product):
+
     diagonal = models.CharField(max_length=255, verbose_name='Діагональ екрану')
     display_type = models.CharField(max_length=255, verbose_name='Тип дисплею')
     reslution = models.CharField(max_length=255, verbose_name='Розширення екрану')
@@ -60,6 +123,7 @@ class Smartphone(Product):
 
 
 class CartProduct(models.Model):
+
     user = models.ForeignKey('Customer', verbose_name='Покупець', on_delete=models.CASCADE)
     cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -73,6 +137,7 @@ class CartProduct(models.Model):
 
 
 class Cart(models.Model):
+
     owner = models.ForeignKey('Customer', verbose_name='Власник', on_delete=models.CASCADE)
     product = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveIntegerField(default=0)
@@ -83,6 +148,7 @@ class Cart(models.Model):
 
 
 class Customer(models.Model):
+
     user = models.ForeignKey(User, verbose_name='Користувач', on_delete=models.CASCADE)
     phone = models.CharField(max_length=20, verbose_name='Номер телефону')
     address = models.CharField(max_length=255, verbose_name='Адрес')
