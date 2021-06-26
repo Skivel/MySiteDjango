@@ -1,18 +1,19 @@
+import sys
+
 from PIL import Image
+
+from io import BytesIO
 
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 User = get_user_model()
 
 
 class MinResolutionMirrorException(Exception):
-    pass
-
-
-class MaxResolutionMirrorException(Exception):
     pass
 
 
@@ -53,7 +54,7 @@ class Category(models.Model):
 class Product(models.Model):
 
     MIN_RESOLUTION = (400, 400)
-    MAX_RESOLUTION = (1000, 1000)
+    MAX_RESOLUTION = (800, 800)
     MAX_IMG_SIZE = 3145728
 
     class Meta:
@@ -74,12 +75,20 @@ class Product(models.Model):
 
         image = self.image
         img = Image.open(image)
+        new_img = img.convert('RGB')
+        filestream = BytesIO()
         min_width, min_height = self.MIN_RESOLUTION
         max_width, max_height = self.MAX_RESOLUTION
         if img.width < min_width or img.height < min_height:
             raise MinResolutionMirrorException('Розширення зображення менше мінімального!')
         if img.width > max_width or img.height > max_height:
-            raise MaxResolutionMirrorException('Розширення зображення більше максимального!')
+            resize_new_img = new_img.resize((600, 600), Image.ANTIALIAS)
+            resize_new_img.save(filestream, "JPEG", quality=90)
+            filestream.seek(0)
+            name = '{}.{}'.format(*self.image.name.split('.'))
+            self.image = InMemoryUploadedFile(
+                filestream, 'ImageField', name, "jpeg/image", sys.getsizeof(filestream), None
+            )
         super(Product, self).save(*args, **kwargs)
 
 

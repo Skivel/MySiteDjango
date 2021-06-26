@@ -11,10 +11,9 @@ class AdminForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['image'].help_text = mark_safe(
             '<span style="color: red; font-size: 14px;">'
-            'Завантажуйте зображення з розширенням від {}x{} до {}x{} та розміром до 3МБ'
+            'Завантажуйте зображення з розширенням від {}x{} та розміром до 3МБ'
             '</span>'.format(
-                *Product.MIN_RESOLUTION,
-                *Product.MAX_RESOLUTION
+                *Product.MIN_RESOLUTION
             )
         )
 
@@ -23,13 +22,10 @@ class AdminForm(ModelForm):
         img = Image.open(image)
         print(img.width, img.height)
         min_width, min_height = Product.MIN_RESOLUTION
-        max_width, max_height = Product.MAX_RESOLUTION
         if image.size > Product.MAX_IMG_SIZE:
-            raise ValidationError('Розмір зображення не більше 3МБ!')
+            raise ValidationError('Розмір зображення більше 3МБ!')
         if img.width < min_width or img.height < min_height:
             raise ValidationError('Розширення зображення менше мінімального!')
-        if img.width > max_width or img.height > max_height:
-            raise ValidationError('Розширення зображення більше максимального!')
         return image
 
 
