@@ -1,0 +1,46 @@
+<table class="table table-striped" style="color: #fff">
+  <tbody>
+    <tr>
+      <td>Кількість ядер</td>
+      <td>{{products.core}}</td>
+    </tr>
+    <tr>
+      <td>Кількість потоків</td>
+      <td>{{products.threads}}</td>
+    </tr>
+    <tr>
+      <td>Кеш</td>
+      <td>{{products.cesh}} Mb</td>
+    </tr>
+    <tr>
+      <td>ТДП</td>
+      <td>{{products.power}} W</td>
+    </tr>
+    <tr>
+      <td>Частота процессора</td>
+      <td>{{products.core_freq}} Mhz</td>
+    </tr>
+    <tr>
+    <tr>
+      <td>Turbo Boost</td>
+      <td>
+        {% if products.boost == True %}
+          +
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>Встроєне графічне ядро</td>
+      <td>
+        {% if products.video == True %}
+          +
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+
+  </tbody>
+</table>
