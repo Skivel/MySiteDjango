@@ -12,13 +12,19 @@
         <div class="col-md-8" style="color: #fff;">
             <nav aria-label="breadcrumb" style="padding-top: 10px;">
                 <ol class="breadcrumb" style="padding-right: 30%; padding-left: 30%;">
-                  <li class="breadcrumb-item"><a href="#">Категорії</a></li>
-                  <li class="breadcrumb-item"><a href="#">Смартфони</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Data</li>
+                  <li class="breadcrumb-item"><a href="{% url 'shop_home' %}">Shop</a></li>
+                  <li class="breadcrumb-item"><a href="{{ products.category.name }}">{{ products.category.name }}</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">{{products.title}}</li>
                 </ol>
             </nav>
             <p>Ціна: {{products.price}} грн.</p>
             <p>Опис: {{products.description}}</p>
         </div>
+        <p class="mt-4" style="color:#fff; padding-left: 15px">Характеристики: </p>
+        {% if products.category.slug == 'smartphone' %}
+            {% include 'shop/smartphone_specification.html' %}
+        {% else %}
+            {% include 'shop/cpu_specification.html' %}
+        {% endif %}
     </div>
 {% endblock %}

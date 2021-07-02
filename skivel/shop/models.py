@@ -120,7 +120,7 @@ class Smartphone(Product):
     reslution = models.CharField(max_length=255, verbose_name='Розширення екрану')
     accum_volume = models.CharField(max_length=200, verbose_name='Об\'єм акумулятора')
     ram = models.CharField(max_length=255, verbose_name='Оперативна пам\'ять')
-    sd = models.BooleanField(default=True)
+    sd = models.BooleanField(default=True, verbose_name='Наявність SD-карти')
     sd_volume_max = models.CharField(max_length=255, verbose_name='Максимальний об\'єм SD-карти')
     main_cam_mp = models.CharField(max_length=255, verbose_name='Основна камера')
     frontal_cam_mp = models.CharField(max_length=255, verbose_name='Фронтальна камера')
