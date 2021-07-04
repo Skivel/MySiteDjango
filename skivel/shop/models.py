@@ -58,7 +58,7 @@ class Category(models.Model):
 class Product(models.Model):
 
     MIN_RESOLUTION = (400, 400)
-    MAX_RESOLUTION = (800, 800)
+    MAX_RESOLUTION = (600, 600)
     MAX_IMG_SIZE = 3145728
 
     class Meta:
@@ -86,7 +86,7 @@ class Product(models.Model):
         if img.width < min_width or img.height < min_height:
             raise MinResolutionMirrorException('Розширення зображення менше мінімального!')
         if img.width > max_width or img.height > max_height:
-            resize_new_img = new_img.resize((600, 600), Image.ANTIALIAS)
+            resize_new_img = new_img.resize((500, 500), Image.ANTIALIAS)
             resize_new_img.save(filestream, "JPEG", quality=90)
             filestream.seek(0)
             name = '{}.{}'.format(*self.image.name.split('.'))
