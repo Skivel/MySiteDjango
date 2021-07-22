@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from .models import CPU, Smartphone
+from .models import CPU, Smartphone, Category
 
 
 def shop_home(request):
-    return render(request, 'shop/index.html')
+    categories = Category.objects.get_categories_for_sidebar()
+    return render(request, 'shop/index.html', {'categories': categories})
 
 
 class ProductDetailView(DetailView):
