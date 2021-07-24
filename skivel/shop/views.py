@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
+
 from .models import CPU, Smartphone, Category
+from .mixins import CategoryDetailMixin
 
 
 def shop_home(request):
@@ -8,7 +10,7 @@ def shop_home(request):
     return render(request, 'shop/index.html', {'categories': categories})
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(CategoryDetailMixin, DetailView):
 
     CT_MODEL_MODEL_CLASS = {
         'cpu': CPU,
@@ -21,11 +23,11 @@ class ProductDetailView(DetailView):
         return super().dispatch(request, *args, **kwargs)
 
     context_object_name = 'products'
-    template_name = '../../../shop/template/shop/product_detail.html'
+    template_name = 'shop/product_detail.html'
     slug_url_kwarg = 'slug'
 
 
-class CategoryDetailView(DetailView):
+class CategoryDetailView(CategoryDetailMixin, DetailView):
 
     model = Category
     queryset = Category.objects.all()
