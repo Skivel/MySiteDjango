@@ -1,7 +1,5 @@
 import sys
-
 from PIL import Image
-
 from io import BytesIO
 
 from django.db import models
@@ -9,8 +7,16 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.urls import reverse
 
 User = get_user_model()
+
+def get_models_for_count(*model_names):
+    return [models.Count(model_name) for model_name in model_names]
+
+def get_product_url(obj, view_name, model_name):
+    ct_model = obj.__class__._meta.model_name
+    return reverse(view_name, kwargs={'ct_model': ct_model, 'slug': obj.slug})
 
 
 class MinResolutionMirrorException(Exception):
@@ -42,19 +48,43 @@ class LatestProducts:
     objects = LatestProductsManager()
 
 
+class CategoryManager(models.Manager):
+
+    CATEGORY_NAME_COUNT_NAME = {
+        'Smartphone': 'smartphone__count',
+        'CPU': 'cpu__count'
+    }
+
+    def get_queryset(self):
+        return super().get_queryset()
+
+    def get_categories_for_sidebar(self):
+        models = get_models_for_count('smartphone', 'cpu')
+        qs = list(self.get_queryset().annotate(*models))
+        data = [
+            dict(name=c.name, url=c.get_absolute_url(), count=getattr(c, self.CATEGORY_NAME_COUNT_NAME[c.name]))
+            for c in qs
+        ]
+        return data
+
+
 class Category(models.Model):
 
     name = models.CharField(max_length=255, verbose_name='Назва категорії')
     slug = models.SlugField(unique=True)
+    objects = CategoryManager()
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
 
 
 class Product(models.Model):
 
     MIN_RESOLUTION = (400, 400)
-    MAX_RESOLUTION = (800, 800)
+    MAX_RESOLUTION = (600, 600)
     MAX_IMG_SIZE = 3145728
 
     class Meta:
@@ -68,7 +98,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Ціна')
 
     def __str__(self):
-
         return self.title
 
     def save(self, *args, **kwargs):
@@ -82,7 +111,7 @@ class Product(models.Model):
         if img.width < min_width or img.height < min_height:
             raise MinResolutionMirrorException('Розширення зображення менше мінімального!')
         if img.width > max_width or img.height > max_height:
-            resize_new_img = new_img.resize((600, 600), Image.ANTIALIAS)
+            resize_new_img = new_img.resize((500, 500), Image.ANTIALIAS)
             resize_new_img.save(filestream, "JPEG", quality=90)
             filestream.seek(0)
             name = '{}.{}'.format(*self.image.name.split('.'))
@@ -105,21 +134,29 @@ class CPU(Product):
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)
 
+    def get_absolute_url(self):
+        return get_product_url(self, 'product_detail')
+
 
 class Smartphone(Product):
+
+    change_form_template = "admin.html"
 
     diagonal = models.CharField(max_length=255, verbose_name='Діагональ екрану')
     display_type = models.CharField(max_length=255, verbose_name='Тип дисплею')
     reslution = models.CharField(max_length=255, verbose_name='Розширення екрану')
     accum_volume = models.CharField(max_length=200, verbose_name='Об\'єм акумулятора')
     ram = models.CharField(max_length=255, verbose_name='Оперативна пам\'ять')
-    sd = models.BooleanField(default=True)
-    sd_volume_max = models.CharField(max_length=255, verbose_name='Максимальний об\'єм SD-карти')
+    sd = models.BooleanField(default=True, verbose_name='Наявність SD-карти')
+    sd_volume_max = models.CharField(max_length=255, null=True, blank=True, verbose_name='Максимальний об\'єм SD-карти')
     main_cam_mp = models.CharField(max_length=255, verbose_name='Основна камера')
     frontal_cam_mp = models.CharField(max_length=255, verbose_name='Фронтальна камера')
 
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)
+
+    def get_absolute_url(self):
+        return get_product_url(self, 'product_detail')
 
 
 class CartProduct(models.Model):
@@ -142,6 +179,8 @@ class Cart(models.Model):
     product = models.ManyToManyField(CartProduct, blank=True, related_name='related_cart')
     total_products = models.PositiveIntegerField(default=0)
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Загальна Ціна')
+    in_order = models.BooleanField(default=False)
+    for_anonymous_user = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)
