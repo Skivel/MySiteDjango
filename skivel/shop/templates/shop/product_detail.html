@@ -12,8 +12,8 @@
         <div class="col-md-8" style="color: #fff;">
             <nav aria-label="breadcrumb" style="padding-top: 10px;">
                 <ol class="breadcrumb" style="padding-right: 30%; padding-left: 30%;">
-                  <li class="breadcrumb-item"><a href="{% url 'shop_home' %}">Shop</a></li>
-                  <li class="breadcrumb-item"><a href="{{ products.category.name }}">{{ products.category.name }}</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'shop_home' %}">SHOP</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'shop_home' %}category/{{ products.category.slug }}">{{ products.category.name }}</a></li>
                   <li class="breadcrumb-item active" aria-current="page">{{products.title}}</li>
                 </ol>
             </nav>
