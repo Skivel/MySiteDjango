@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from .models import CPU, Smartphone
+from .models import CPU, Smartphone, Category
 
 
 def shop_home(request):
-    return render(request, 'shop/index.html')
+    categories = Category.objects.get_categories_for_sidebar()
+    return render(request, 'shop/index.html', {'categories': categories})
 
 
 class ProductDetailView(DetailView):
@@ -20,5 +21,14 @@ class ProductDetailView(DetailView):
         return super().dispatch(request, *args, **kwargs)
 
     context_object_name = 'products'
-    template_name = 'shop/product_detail.html'
+    template_name = '../../../shop/template/shop/product_detail.html'
+    slug_url_kwarg = 'slug'
+
+
+class CategoryDetailView(DetailView):
+
+    model = Category
+    queryset = Category.objects.all()
+    context_object_name = 'category'
+    template_name = 'shop/category_detail.html'
     slug_url_kwarg = 'slug'
