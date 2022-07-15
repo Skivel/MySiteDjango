@@ -1,23 +1,36 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 
 def index(request):
-    data = {
-        'title': 'Головна сторінка'
+    context = {
+        'title': 'About Me'
     }
-    return render(request, 'main/index.html', data)
+    return render(request, 'main/index.html', context)
 
 
-def about(request):
-    data = {
-        'title': 'Про нас'
+def services(request):
+    context = {
+        'title': 'Services'
     }
-    return render(request, 'main/about.html', data)
+    return render(request, 'main/services.html', context)
 
 
-def info(request):
-    data = {
-        'title': 'Інфо'
+def skills(request):
+    context = {
+        'title': 'Skills'
     }
-    return render(request, 'main/info.html', data)
+    return render(request, 'main/skills.html', context)
+
+
+def portfolio(request):
+    context = {
+        'title': 'Portfolio'
+    }
+    return render(request, 'main/portfolio.html', context)
+
+
+def contact(request):
+    context = {
+        'title': 'Contact'
+    }
+    return render(request, 'main/contact.html', context)
