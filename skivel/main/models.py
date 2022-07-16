@@ -5,7 +5,7 @@ class Me(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(verbose_name='Заговолок', max_length=255)
     description = models.TextField(verbose_name='Анотація')
-    img = models.ImageField(verbose_name='Зображення', upload_to="static/me/img")
+    img = models.ImageField(verbose_name='Зображення', upload_to="me/img")
     age = models.IntegerField(verbose_name='Вік')
     email = models.EmailField(verbose_name='Email')
     phone = models.CharField(verbose_name='Номер телефону', max_length=255)
@@ -31,10 +31,8 @@ class Portfolio(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name='Назва проекту', max_length=255)
     description = models.TextField(verbose_name='Опис проекту')
-    img = models.ImageField(verbose_name='Зображення', upload_to="static/portfolio/img")
+    img = models.ImageField(verbose_name='Зображення', upload_to="portfolio/img")
     git_url = models.URLField(verbose_name='GitHub URL')
-
-
 
     class Meta:
         verbose_name = 'Portfolio'

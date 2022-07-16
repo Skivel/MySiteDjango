@@ -310,7 +310,7 @@ footer a:not(.nav-link) {
   position: absolute;
   bottom: -25px;
   right: -30px;
-  background-image: url("../../../static/img/marker.svg");
+  background-image: url("../../../media/img/marker.svg");
   background-repeat: no-repeat;
 }
 
