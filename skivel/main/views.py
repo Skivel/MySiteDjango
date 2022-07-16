@@ -12,13 +12,6 @@ def index(request):
     return render(request, 'main/index.html', context)
 
 
-def services(request):
-    context = {
-        'title': 'Services'
-    }
-    return render(request, 'main/services.html', context)
-
-
 def skills(request):
     my_skills = Skills.objects.order_by('-skills')
     context = {

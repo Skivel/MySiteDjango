@@ -6,4 +6,18 @@
 <div class="text-center mb-5">
     <h2 class="marker marker-center text">My Portfolio</h2>
 </div>
+<br>
+<br>
+<br>
+<br>
+<div class="row">
+    {% for el in portfolio %}
+    <div class="col-md-4">
+        <figure class="caption-shadow">
+            <img src="{{ el.img.url }}">
+            <figcaption><a href="{{ el.git_url }}" target="_blank">{{ el.name }}</a></figcaption>
+        </figure>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

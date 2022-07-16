@@ -334,3 +334,36 @@ footer a:not(.nav-link) {
 .entry-title a {
   text-decoration: none;
 }
+
+
+/*--------------------------------------------------------------------------------------------------*/
+/*------------------------------------PORTFOLIO----------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------*/
+
+* {box-sizing: border-box;}
+.caption-shadow {
+  width: 392px;
+  margin: 50px;
+  position: relative;
+  border: 6px solid #1fbdb8;
+}
+.caption-shadow img {
+  width: 380px;
+  height: 200px;
+  height: auto;
+  display: block;
+}
+.caption-shadow figcaption {
+  width: 100%;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  background: #1fbdb8;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  box-shadow: 0 -10px 20px -5px hsla(0, 0%, 0%, .4);
+}
