@@ -5,7 +5,7 @@ class Me(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(verbose_name='Заговолок', max_length=255)
     description = models.TextField(verbose_name='Анотація')
-    img = models.ImageField(verbose_name='Зображення', upload_to="me/img")
+    img = models.ImageField(verbose_name='Зображення', null=True, upload_to="me/img")
     age = models.IntegerField(verbose_name='Вік')
     email = models.EmailField(verbose_name='Email')
     phone = models.CharField(verbose_name='Номер телефону', max_length=255)
