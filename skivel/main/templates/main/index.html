@@ -3,5 +3,75 @@
 {% block title %}{{title}}{% endblock %}
 
 {% block body %}
-
+<div class="text-center mb-5">
+    <h2 class="marker marker-center text">About Me</h2>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% if my %}
+{% for el in my %}
+<div class="section pt-4 px-3 px-lg-4" style="margin-left: 20%;" id="about">
+    <div class="container-narrow">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="h4 my-2">{{ el.title }}</h2>
+                <p>{{ el.description }}</p>
+                <div class="row mt-3">
+                    <div class="col-sm-2">
+                        <div class="pb-1">Age:</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="pb-1 fw-bolder">{{ el.age }}</div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pb-1">Email:</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="pb-1 fw-bolder">{{ el.email }}</div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pb-1">Telegram:</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="pb-1 fw-bolder">{{ el.telegram }}</div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pb-1">Phone:</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="pb-1 fw-bolder">{{ el.phone }}</div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pb-1">Address:</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="pb-1 fw-bolder">{{ el.address }}</div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pb-1">Staus:</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="pb-1 fw-bolder">
+                            {% if el.status == True %}
+                            Busy
+                            {% else %}
+                            Available
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 offset-md-1" data-aos="fade-left" data-aos-delay="100"><img
+                    class="avatar img-fluid mt-2" src="{{ el.img.url }}" width="400" height="400"
+                    alt="Denys Buhrov"/></div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
 {% endblock %}

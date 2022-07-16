@@ -9,6 +9,7 @@ class Me(models.Model):
     age = models.IntegerField(verbose_name='Вік')
     email = models.EmailField(verbose_name='Email')
     phone = models.CharField(verbose_name='Номер телефону', max_length=255)
+    telegram = models.CharField(verbose_name='Телеграм', max_length=100)
     address = models.CharField(verbose_name='Адрес', max_length=255)
     status = models.BooleanField(verbose_name='Статус зайнятості')
 
@@ -41,9 +42,9 @@ class Portfolio(models.Model):
 
 class ContactMe(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(verbose_name="'Ім'я", max_length=255)
+    name = models.CharField(verbose_name="Name", max_length=255)
     email = models.EmailField(verbose_name='Email')
-    massage = models.TextField(verbose_name='Повідомлення')
+    massage = models.TextField(verbose_name='Massage')
 
     class Meta:
         verbose_name = 'Massage'
