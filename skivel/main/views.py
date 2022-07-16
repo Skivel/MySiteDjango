@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Me, Skills, Portfolio, ContactMe
+from .forms import PostContact
 
 
 def index(request):
@@ -28,8 +29,10 @@ def skills(request):
 
 
 def portfolio(request):
+    my_portfolio = Portfolio.objects.order_by('-id')
     context = {
-        'title': 'Portfolio'
+        'title': 'Portfolio',
+        'portfolio': my_portfolio
     }
     return render(request, 'main/portfolio.html', context)
 
@@ -37,9 +40,21 @@ def portfolio(request):
 def contact(request):
     my = Me.objects.all()
     user_contact = ContactMe.objects.all()
+    initial_data = {
+        'Name': 'name',
+        'Email': 'email',
+        'Massage': '1'
+    }
+    if request.method == 'POST':
+        form = PostContact(request.POST, initial=initial_data)
+        form.save()
+        return redirect('/')
+    else:
+        form = PostContact
     context = {
         'title': 'Contact',
         'contact': user_contact,
-        'my': my
+        'my': my,
+        'form': form
     }
     return render(request, 'main/contact.html', context)

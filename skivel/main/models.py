@@ -42,9 +42,9 @@ class Portfolio(models.Model):
 
 class ContactMe(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(verbose_name="'Ім'я", max_length=255)
+    name = models.CharField(verbose_name="Name", max_length=255)
     email = models.EmailField(verbose_name='Email')
-    massage = models.TextField(verbose_name='Повідомлення')
+    massage = models.TextField(verbose_name='Massage')
 
     class Meta:
         verbose_name = 'Massage'
