@@ -9,6 +9,7 @@ class Me(models.Model):
     age = models.IntegerField(verbose_name='Вік')
     email = models.EmailField(verbose_name='Email')
     phone = models.CharField(verbose_name='Номер телефону', max_length=255)
+    telegram = models.CharField(verbose_name='Телеграм', max_length=100)
     address = models.CharField(verbose_name='Адрес', max_length=255)
     status = models.BooleanField(verbose_name='Статус зайнятості')
 

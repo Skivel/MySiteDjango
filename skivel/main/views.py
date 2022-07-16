@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from .models import Me, Skills, Portfolio, ContactMe
 
 
 def index(request):
+    my = Me.objects.all()
     context = {
-        'title': 'About Me'
+        'title': 'About Me',
+        'my': my
     }
     return render(request, 'main/index.html', context)
 
@@ -16,8 +19,10 @@ def services(request):
 
 
 def skills(request):
+    my_skills = Skills.objects.order_by('-skills')
     context = {
-        'title': 'Skills'
+        'title': 'Skills',
+        'skills': my_skills
     }
     return render(request, 'main/skills.html', context)
 
@@ -30,7 +35,11 @@ def portfolio(request):
 
 
 def contact(request):
+    my = Me.objects.all()
+    user_contact = ContactMe.objects.all()
     context = {
-        'title': 'Contact'
+        'title': 'Contact',
+        'contact': user_contact,
+        'my': my
     }
     return render(request, 'main/contact.html', context)
